@@ -1,11 +1,13 @@
 // File: tree.js
 
 // Spacing between levels
-const VERTICAL_SPACING = 150
+const VERTICAL_SPACING = 150;
 // Spacing between the root node and the top of the screen 
-const VERTICAL_OFFSET = 50
+const VERTICAL_OFFSET = 90;
 // Delay between visualising actions
-const WAIT_TIME = 1000
+const WAIT_TIME = 1000;
+
+const NODE_RADIUS = 40;
 
 // Represents an AVL tree node
 class Node {
@@ -17,7 +19,7 @@ class Node {
         // this.height = 1;
     }
 
-    // Gives the node's inorder succesor
+    // Gives the node's in-order succesor
     succesor() {
         if (!this.right) {
             return null;
@@ -58,6 +60,7 @@ class Tree {
         if (!this.root) {
             this.root = new Node(key);
             this.visualise();
+            await sleep(WAIT_TIME);
         } else {
             await this._recurInsert(this.root, key);
         }
@@ -90,7 +93,7 @@ class Tree {
             return;
         }
 
-        await this.balanceNode(node);
+        await this._balanceNode(node);
     }
 
     // Deletes a key from the tree
@@ -144,7 +147,7 @@ class Tree {
                 this.visualise();
                 await sleep(WAIT_TIME);   
             } else {
-                // Swap with inorder succesor and then delete 
+                // Swap with in-order succesor and then delete 
                 const succesor = node.succesor();
                 const tmp = node.key;
                 node.key = succesor.key;
@@ -155,33 +158,33 @@ class Tree {
             }
         }
 
-        await this.balanceNode(node);
+        await this._balanceNode(node);
     }
 
     // Balances a given node
-    async balanceNode(node) {
+    async _balanceNode(node) {
         const bf = balanceFactor(node);
         if (bf > 1) {
             if (balanceFactor(node.left) < 0) {
-                await this.leftRotate(node.left);
-                await this.rightRotate(node);
+                await this._leftRotate(node.left);
+                await this._rightRotate(node);
                 
             } else {
-                await this.rightRotate(node);
+                await this._rightRotate(node);
             }
         } else if (bf < -1) {
             if (balanceFactor(node.right) > 0) {
-                await this.rightRotate(node.right);
-                await this.leftRotate(node);
+                await this._rightRotate(node.right);
+                await this._leftRotate(node);
             } else {
-                await this.leftRotate(node);
+                await this._leftRotate(node);
             }
         }
 
     } 
 
     // Performs a left rotation on a given node
-    async leftRotate(x) {
+    async _leftRotate(x) {
         const y = x.right;
         x.right = y.left;
         if (y.left) {
@@ -202,7 +205,7 @@ class Tree {
     }
 
     // Performs a left rotation on a given node
-    async rightRotate(y) {
+    async _rightRotate(y) {
         const x = y.left;
         y.left = x.right;
         if (x.right) {
@@ -238,12 +241,14 @@ class Tree {
 
         // Draw the node
         const nodeElem = document.createElement('div');
+        nodeElem.className = 'node';
         const spacing = SCREEN_WIDTH / (2**depth + 1);
         const x = (i + 1) * spacing;
         const y = VERTICAL_OFFSET + depth * VERTICAL_SPACING;
-        nodeElem.className = 'node';
-        nodeElem.style.left = `${x}px`;
-        nodeElem.style.top = `${y}px`;
+        // const radius = parseFloat(getComputedStyle(nodeElem).getPropertyValue("--diameter")) / 2;
+        // console.log(radius);
+        nodeElem.style.left = `${x-NODE_RADIUS}px`;
+        nodeElem.style.top = `${y-NODE_RADIUS}px`;
         nodeElem.textContent = node.key;
         document.getElementById('tree-container').appendChild(nodeElem);
         
@@ -263,9 +268,8 @@ class Tree {
         const angle = Math.atan2(y - parentY, x - parentX) * (180 / Math.PI);
         lineElem.style.width = `${length}px`;
         lineElem.style.transform = `rotate(${angle}deg)`;
-        const nodeRadius = parseFloat(getComputedStyle(nodeElem).getPropertyValue("--diameter")) / 2
-        lineElem.style.left = `${parentX+nodeRadius}px`;
-        lineElem.style.top = `${parentY+nodeRadius}px`;
+        lineElem.style.left = `${parentX}px`;
+        lineElem.style.top = `${parentY}px`;
         lineElem.style.position = 'absolute';
         lineElem.style.transformOrigin = '0% 50%';
         document.getElementById('tree-container').appendChild(lineElem);
