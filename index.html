@@ -1,0 +1,24 @@
+<!-- File: index.html  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVL Visualiser</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="controls">
+        <label for="key">Enter Key:</label>
+        <input type="text" id="key" maxlength="1" style="width: 25px;">
+        <button id="insertButton" onclick="insert()">Insert</button>
+        <button id="removeButton" onclick="remove()">Delete</button>
+        <button id="undoButton" onclick="undo()">Undo</button>
+    </div>
+    <div id="tree-container"></div>
+    <script src="util.js"></script>
+    <script src="tree.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

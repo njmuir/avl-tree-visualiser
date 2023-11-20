@@ -1,0 +1,33 @@
+/* File: style.css */
+
+/* Styling for a node */
+.node {
+    --diameter: 80px;
+    width: var(--diameter);
+    height: var(--diameter);
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    font-size: 30px;
+    color: white;
+}
+
+/* Styling for a line connecting nodes */
+.line {
+    position: absolute;
+    background-color: black;
+    height: 2px;
+    width: 0;
+    z-index: -1;
+}
+
+#controls  {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100; 
+}
